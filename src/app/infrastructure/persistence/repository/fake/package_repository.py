@@ -26,6 +26,15 @@ class FakePackageRepositoryAdapter(PackageRepositoryPort):
         Operator.IN: lambda col, val: col in val
     }
 
+    COLUMNS_MAP: Dict[str, Callable[[Package], Any]] = {
+        "id": lambda entity: entity.id,
+        "sender_id": lambda entity: entity.sender_id,
+        "driver_id": lambda entity: entity.driver_id,
+        "status": lambda entity: entity.status,
+        "created_at": lambda entity: entity.created_at,
+        "updated_at": lambda entity: entity.updated_at
+    }
+
     def __init__(self, base: Optional[List[Package]] = None) -> None:
         """Método de instanciación de objetos de la clase.
         
@@ -79,18 +88,19 @@ class FakePackageRepositoryAdapter(PackageRepositoryPort):
         results = list(self._base)
         for filter in criteria.filters:
             
-            attr = f"_{filter.field}"
-            if results and not hasattr(results[0], attr):
+            getter = self.COLUMNS_MAP.get(filter.field)
+            if results and not getter:
                 raise NotAValidAttribute(f"El atributo {filter.field} no es un campo de filtrado válido.")
 
             condition_func = self.OPERATOR_MAP[filter.operator]
-            results = [entity for entity in results if condition_func(getattr(entity, attr), filter.value)]
+            results = [entity for entity in results if condition_func(getter(entity), filter.value)]
 
         if criteria.pagination:
             pagination = criteria.pagination
 
-            if pagination.order_by and results and hasattr(results[0], f"_{pagination.order_by}"):
-                results = sorted(results, key = lambda x: getattr(x, f"_{pagination.order_by}"),
+            getter = self.COLUMNS_MAP.get(pagination.order_by)
+            if pagination.order_by and results and getter:
+                results = sorted(results, key = lambda x: getter(x),
                                  reverse = True if pagination.order_dir == "desc" else False)
             
             results = results[pagination.offset: pagination.offset + pagination.limit]
