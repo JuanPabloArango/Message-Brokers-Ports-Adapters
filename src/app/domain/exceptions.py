@@ -20,6 +20,12 @@ class SenderAlreadyVerified(DomainException):
     ...
 
 
+class SenderNotVerified(DomainException):
+    """Clase que representa errores al internar que un sender no verificado mande paquetes."""
+
+    ...
+
+
 class PackageTransitionError(DomainException):
     """Clase que representa un error de transición en el estado de un Package."""
 

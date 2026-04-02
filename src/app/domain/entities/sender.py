@@ -28,8 +28,8 @@ class Sender:
         self._id: ID = ID(value = id)
         self._status: SenderStatus = SenderStatus.UNVERIFIED
 
-        self._created_at: Optional[dt.datetime] = None
-        self._updated_at: Optional[dt.datetime] = None
+        self._created_at: Optional[dt.datetime] = dt.datetime.now()
+        self._updated_at: Optional[dt.datetime] = dt.datetime.now()
 
     def verify(self) -> None:
         """Método que permite validar el Sender y, por ende, habilitarlo
@@ -74,6 +74,28 @@ class Sender:
             Estado actual del Sender."""
 
         return self._status
+    
+    @property
+    def created_at(self) -> dt.datetime:
+        """Propieda que encapsula el atributo created_at.
+        
+        Returns:
+        ----------
+        dt.datetime.
+            Fecha de creación de la entidad."""
+
+        return self._created_at
+    
+    @property
+    def updated_at(self) -> dt.datetime:
+        """Propieda que encapsula el atributo updated_at.
+        
+        Returns:
+        ----------
+        dt.datetime.
+            Fecha de última actualización de la entidad."""
+
+        return self._updated_at
     
     @classmethod
     def create(cls, id: Optional[str] = None) -> Sender:

@@ -34,8 +34,8 @@ class Driver:
         self._status: DriverStatus = DriverStatus.AVAILABLE
         self._last_delivery: DeliveryDate = DeliveryDate(last_delivery = last_delivery)
 
-        self._created_at: Optional[dt.datetime] = None
-        self._updated_at: Optional[dt.datetime] = None
+        self._created_at: Optional[dt.datetime] = dt.datetime.now()
+        self._updated_at: Optional[dt.datetime] = dt.datetime.now()
 
     def mark_as_available(self) -> None:
         """Método que se encarga de marcar a un conductor como libre cuando
@@ -87,6 +87,28 @@ class Driver:
             Momento del último despacho hecho por la entidad."""
 
         return self._last_delivery
+    
+    @property
+    def created_at(self) -> dt.datetime:
+        """Propieda que encapsula el atributo created_at.
+        
+        Returns:
+        ----------
+        dt.datetime.
+            Fecha de creación de la entidad."""
+
+        return self._created_at
+    
+    @property
+    def updated_at(self) -> dt.datetime:
+        """Propieda que encapsula el atributo updated_at.
+        
+        Returns:
+        ----------
+        dt.datetime.
+            Fecha de última actualización de la entidad."""
+
+        return self._updated_at
     
     @classmethod
     def create(cls, id: Optional[str] = None, last_delivery: Optional[str] = None) -> Driver:

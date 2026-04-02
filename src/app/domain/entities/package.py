@@ -34,8 +34,8 @@ class Package:
         self._id: ID = ID(value = id)
         self._status: PackageStatus = PackageStatus.PENDING
 
-        self._created_at: Optional[dt.datetime] = None
-        self._updated_at: Optional[dt.datetime] = None
+        self._created_at: Optional[dt.datetime] = dt.datetime.now()
+        self._updated_at: Optional[dt.datetime] = dt.datetime.now()
 
     def assign_driver(self, driver_id: ID) -> None:
         """Método que permite asignar un transportador al paquete.
@@ -103,6 +103,28 @@ class Package:
             Estado actual del Driver."""
 
         return self._status
+    
+    @property
+    def created_at(self) -> dt.datetime:
+        """Propieda que encapsula el atributo created_at.
+        
+        Returns:
+        ----------
+        dt.datetime.
+            Fecha de creación de la entidad."""
+
+        return self._created_at
+    
+    @property
+    def updated_at(self) -> dt.datetime:
+        """Propieda que encapsula el atributo updated_at.
+        
+        Returns:
+        ----------
+        dt.datetime.
+            Fecha de última actualización de la entidad."""
+
+        return self._updated_at
     
     @classmethod
     def create(cls, sender_id: ID, id: Optional[str] = None) -> Package:
