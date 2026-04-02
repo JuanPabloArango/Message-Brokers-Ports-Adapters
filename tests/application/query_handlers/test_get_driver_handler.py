@@ -3,12 +3,17 @@
 # Librerías Externas.
 from typing import List
 
+import pytest
+
 # Librerías Internas.
 from app.domain.entities.driver import Driver
-from app.domain.value_objects.id import ID
+
+from app.application.dtos.driver import DriverDTO
 
 from app.application.queries.get_driver_by_id import GetDriverQuery
 from app.application.query_handlers.get_driver import GetDriverHandler
+
+from app.application.exceptions import DriverNotFound
 
 from app.infrastructure.persistence.repository.fake.uow import FakeUnitOfWorkAdapter
 
@@ -30,8 +35,8 @@ class TestGetDriverHandler:
         handler = GetDriverHandler(unit_of_work = uow)
         driver = handler.handle(query = GetDriverQuery(driver_id = "4"))
 
-        assert isinstance(driver, Driver), "Valide que la instancia sea hallada y tenga el typing correcto."
-        assert driver.id == ID(value = "4"), "Valide que los atributos de la instancia sean los esperados."
+        assert isinstance(driver, DriverDTO), "Valide que la instancia sea hallada y tenga el typing correcto."
+        assert driver.id == "4", "Valide que los atributos de la instancia sean los esperados."
 
     def test_driver_not_found_handler(self, base_drivers: List[Driver]) -> None:
         """Método que contiene la prueba unitaria del método 'handle' en el
@@ -45,6 +50,6 @@ class TestGetDriverHandler:
         uow = FakeUnitOfWorkAdapter(drivers = base_drivers)
 
         handler = GetDriverHandler(unit_of_work = uow)
-        driver = handler.handle(query = GetDriverQuery(driver_id = "42"))
 
-        assert driver is None, "Valide que la instancia no sea hallada."
+        with pytest.raises(DriverNotFound):
+            driver = handler.handle(query = GetDriverQuery(driver_id = "42"))

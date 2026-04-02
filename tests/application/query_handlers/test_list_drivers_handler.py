@@ -39,7 +39,7 @@ class TestListDriversHandler:
         drivers = handler.handle(query = ListDriversQuery(criteria = criteria))
 
         assert len(drivers) == 3, "Valide que haya obtenido la cantidad esperada de Drivers."
-        assert all([driver.last_delivery.last_delivery is not None for driver in drivers]), "Valide que se cumpla el criterio de filtrado."
+        assert all([driver.last_delivery is not None for driver in drivers]), "Valide que se cumpla el criterio de filtrado."
 
     def test_list_no_drivers_handler(self, base_drivers: List[Driver]) -> None:
         """Método que contiene la prueba unitaria del método 'handle' en el
@@ -62,5 +62,3 @@ class TestListDriversHandler:
         drivers = handler.handle(query = ListDriversQuery(criteria = criteria))
 
         assert len(drivers) == 0, "Valide que haya obtenido la cantidad esperada de Drivers."
-
-    
